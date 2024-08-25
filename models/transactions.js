@@ -1,27 +1,36 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../connection").Sequelize;
+const mongoose = require("mongoose");
 
-const Transactions = sequelize.define('Transactions',{
-    txid:{
-        type:DataTypes.STRING,
-        unique: true,
-        primaryKey:true
+// Define the schema
+const transactionSchema = new mongoose.Schema({
+    txid: {
+        type: String,
+        unique: true,  // Ensures uniqueness, similar to Sequelize's unique constraint
+        required: true, // Primary key equivalent, ensures that every document must have this field
     },
-    fromAddress:{
-        type:DataTypes.STRING
+    fromAddress: {
+        type: String,
+        required: true, // You can specify this if the field must be present
     },
-    toAddress:{
-        type:DataTypes.STRING
+    toAddress: {
+        type: String,
+        required: true, // You can specify this if the field must be present
     },
-    amount:{
-        type:DataTypes.DECIMAL(18, 8)
+    amount: {
+        type: mongoose.Decimal128, // Use Decimal128 for precision, suitable for financial data
+        required: true, // Ensure this field is always present
     },
-    timestamp:{
-        type:DataTypes.DATE
+    timestamp: {
+        type: Date,
+        required: true, // Ensure this field is always present
+        default: Date.now, // You can set a default value if needed
     },
-    network:{
-        type:DataTypes.STRING
+    network: {
+        type: String,
+        required: true, // Ensure this field is always present
     }
-})
+});
 
-module.exports = Transactions;
+// Create a model using the schema
+const Transaction = mongoose.model("Transaction", transactionSchema);
+
+module.exports = Transaction;

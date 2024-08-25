@@ -1,43 +1,21 @@
-const mysql = require("mysql");
-// Create a connection to the MySQL database. Replace 'yourusername' and 'yourpassword' with your MySQL credentials.
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "admin123",
-    port: 3306,
-});
+const mongoose = require("mongoose");
 
-con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-    con.query(
-        "CREATE DATABASE IF NOT EXISTS cryptocurrencies",
-        function (err, result) {
-            if (err) throw err;
-            console.log("Database created");
-            con.query("USE cryptocurrencies", function (err, result) {
-                if (err) throw err;
-                console.log("Database selected");
-            });
-        }
-    );
-});
+// Replace 'yourMongoDBURL' with your MongoDB connection string.
+// Example: 'mongodb://localhost:27017/cryptocurrencies'
+const mongoDBURL = "mongodb+srv://admin:admin@hack1.hx8sq.mongodb.net/?retryWrites=true&w=majority&appName=hack1";
 
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("cryptocurrencies", "root", "admin123", {
-    host: "localhost",
-    dialect: "mysql",
-    log:"false"
-});
+// Connect to MongoDB
+mongoose
+  .connect(mongoDBURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB successfully.");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
 
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log("Connection has been established successfully.");
-    })
-    .catch((error) => {
-        console.error("Unable to connect to the database: ", error);
-    });
-
-exports.connect = con;
-exports.Sequelize = sequelize;
+// Export the connection to use in other parts of your application
+module.exports = mongoose;

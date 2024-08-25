@@ -1,23 +1,31 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../connection").Sequelize;
+const mongoose = require("mongoose");
 
-const Networks = sequelize.define('Networks',{
-    network:{
-        type:DataTypes.STRING,
+// Define the schema
+const networkSchema = new mongoose.Schema({
+    network: {
+        type: String,
+        required: true // Make the field required if it's mandatory
     },
     chainId: {
-        type: DataTypes.INTEGER,
-        unique: true
+        type: Number,
+        unique: true, // Unique constraint similar to Sequelize's unique: true
+        required: true // Make the field required if it's mandatory
     },
     rpcUrl: {
-        type: DataTypes.STRING
+        type: String,
+        required: true // Make the field required if it's mandatory
     },
     explorerurl: {
-        type: DataTypes.STRING
+        type: String,
+        required: true // Make the field required if it's mandatory
     },
-    natiiveCurrency:{
-        type: DataTypes.STRING
+    nativeCurrency: {
+        type: String,
+        required: true // Make the field required if it's mandatory
     }
-})
+});
 
-module.exports = Networks;
+// Create a model using the schema
+const Network = mongoose.model("Network", networkSchema);
+
+module.exports = Network;
